@@ -36,17 +36,17 @@
 curl -fsSL https://raw.githubusercontent.com/pa4uslf/ai-legal-codex/main/install.sh | bash
 ```
 
-这会把全部 skill 安装到 `~/.codex/skills`，并把完整审查用的分析框架安装到 `~/.codex/agents`。
+This installs all skills into `~/.codex/skills` and the full-review analysis frameworks into `~/.codex/agents`.
 
-也可以本地安装：
+You can also install locally:
 
 ```bash
 ./install.sh
 ```
 
-安装后，重启 Codex 即可生效。
+After installation, restart Codex.
 
-如果你需要导出 PDF 报告，再额外安装：
+If you want PDF export, also install:
 
 ```bash
 pip3 install reportlab
@@ -56,7 +56,7 @@ pip3 install reportlab
 
 ## How To Use In Codex
 
-你可以直接自然语言触发：
+Use natural-language prompts in Codex:
 
 ```text
 Review ./msa.pdf and tell me the top 3 legal risks.
@@ -64,11 +64,11 @@ Generate a mutual NDA between Acme and Beta for partnership talks.
 Audit https://example.com for GDPR and CCPA compliance gaps.
 ```
 
-推荐工作流：
+Recommended workflow:
 
-1. 先让 Codex 完整审查合同并输出风险摘要
-2. 再让 Codex 生成可直接回发的修改语言
-3. 最后让 Codex 把最新分析导出成正式 PDF
+1. Ask Codex for a full contract review and risk summary
+2. Ask Codex to draft negotiation language for the risky clauses
+3. Ask Codex to turn the latest analysis into a polished PDF
 
 ---
 
@@ -103,11 +103,11 @@ Audit https://example.com for GDPR and CCPA compliance gaps.
 
 ## What You Get
 
-- `Contract Safety Score`：快速判断一份合同是否值得继续推进
-- `Clause-by-Clause Analysis`：逐条解释条款含义、风险和修改建议
-- `Missing Protections`：指出合同缺失的关键保护条款
-- `Negotiation Priorities`：给出最值得优先谈判的修改项
-- `PDF Report`：生成适合交付给客户或团队的正式版报告
+- `Contract Safety Score`: Quickly shows whether a contract looks safe enough to keep moving forward
+- `Clause-by-Clause Analysis`: Explains what each clause means, why it matters, and how to improve it
+- `Missing Protections`: Highlights the key safeguards the contract does not include
+- `Negotiation Priorities`: Ranks the most important changes to negotiate first
+- `PDF Report`: Produces a polished deliverable for clients, founders, or internal teams
 
 ---
 
@@ -130,7 +130,7 @@ The most powerful workflow. Ask Codex to review any contract and get:
 Review my-contract.pdf and produce a full legal risk report with a contract safety score.
 ```
 
-Codex 版会默认按 5 个分析视角完成完整审查；如果你的宿主环境明确允许并行子代理，也可以把这 5 个视角并行执行：
+The Codex version runs the full review through 5 analysis lenses by default. If your host environment explicitly supports parallel sub-agents, these lenses can also be delegated in parallel:
 
 | Analysis Lens | Role | Weight |
 |-------|------|--------|
@@ -146,13 +146,13 @@ Results are aggregated into a unified report with a single Contract Safety Score
 
 ## Codex-Friendly Design
 
-这个仓库已经专门适配 Codex：
+This repository is tuned specifically for Codex:
 
-- 所有 skills 都补齐了 Codex frontmatter
-- 安装目标统一为 `~/.codex/skills`
-- PDF 脚本和模板会随 `legal-report-pdf` 一起安装
-- 完整合同审查默认按 5 个分析视角运行，不强依赖并行子代理
-- README 默认使用自然语言触发示例，不依赖 slash command 约定
+- Every skill includes Codex-compatible frontmatter
+- Installation targets `~/.codex/skills`
+- The PDF script and template are bundled with `legal-report-pdf`
+- Full contract review runs as 5 analysis lenses by default, without requiring parallel sub-agents
+- The README uses natural-language examples instead of relying on slash-command conventions
 
 ---
 
