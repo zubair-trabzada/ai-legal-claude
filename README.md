@@ -11,6 +11,10 @@
   Every contract has hidden risks. This tool finds them in 60 seconds.
 </p>
 
+<p align="center">
+  <strong>Install once, then ask Codex to review contracts in plain English.</strong>
+</p>
+
 ---
 
 ## Why This Matters
@@ -42,6 +46,38 @@ curl -fsSL https://raw.githubusercontent.com/pa4uslf/ai-legal-codex/main/install
 
 安装后，重启 Codex 即可生效。
 
+如果你需要导出 PDF 报告，再额外安装：
+
+```bash
+pip3 install reportlab
+```
+
+---
+
+## How To Use In Codex
+
+你可以直接用命令：
+
+```text
+/legal review ./msa.pdf
+/legal nda mutual NDA between Acme and Beta for partnership talks
+/legal compliance https://example.com
+```
+
+也可以直接自然语言触发：
+
+```text
+Review this contract and give me the top 3 risks.
+Generate an NDA for a freelance designer working with a startup.
+Audit this website for GDPR and CCPA compliance gaps.
+```
+
+推荐工作流：
+
+1. 先跑 `/legal review <file>`
+2. 再跑 `/legal negotiate <file>` 获取可直接回发的修改语言
+3. 最后跑 `/legal report-pdf` 生成正式交付版 PDF
+
 ---
 
 ## All 14 Commands
@@ -70,6 +106,16 @@ curl -fsSL https://raw.githubusercontent.com/pa4uslf/ai-legal-codex/main/install
 |---------|-------------|
 | `/legal compliance <url>` | Compliance gap analysis — GDPR, CCPA, ADA, PCI-DSS, CAN-SPAM, SOC 2. |
 | `/legal report-pdf` | Professional PDF report with score gauges, risk charts, and prioritized actions. |
+
+---
+
+## What You Get
+
+- `Contract Safety Score`：快速判断一份合同是否值得继续推进
+- `Clause-by-Clause Analysis`：逐条解释条款含义、风险和修改建议
+- `Missing Protections`：指出合同缺失的关键保护条款
+- `Negotiation Priorities`：给出最值得优先谈判的修改项
+- `PDF Report`：生成适合交付给客户或团队的正式版报告
 
 ---
 
@@ -106,6 +152,18 @@ Results are aggregated into a unified report with a single Contract Safety Score
 
 ---
 
+## Codex-Friendly Design
+
+这个仓库已经专门适配 Codex：
+
+- 所有 skills 都补齐了 Codex frontmatter
+- 安装目标统一为 `~/.codex/skills`
+- PDF 脚本和模板会随 `legal-report-pdf` 一起安装
+- 完整合同审查默认按 5 个分析视角运行，不强依赖并行子代理
+- 既支持 `/legal ...` 命令，也支持自然语言触发
+
+---
+
 ## Use Cases
 
 ### For Freelancers & Agencies
@@ -130,8 +188,8 @@ Results are aggregated into a unified report with a single Contract Safety Score
 
 ## Project Structure
 
-```
-ai-legal-claude/
+```text
+ai-legal-codex/
 ├── legal/
 │   └── SKILL.md                    # Main orchestrator (command router)
 ├── skills/
@@ -190,6 +248,8 @@ Or run locally:
 ## Disclaimer
 
 This tool is for educational and informational purposes only. It does **not** provide legal advice and should **not** be used as a substitute for consultation with a licensed attorney. Always have a qualified lawyer review any contract before signing.
+
+Do not rely on AI-generated output as your final legal position in employment, fundraising, M&A, privacy, regulatory, or other high-stakes matters.
 
 ---
 
