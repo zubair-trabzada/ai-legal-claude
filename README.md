@@ -56,56 +56,48 @@ pip3 install reportlab
 
 ## How To Use In Codex
 
-你可以直接用命令：
+你可以直接自然语言触发：
 
 ```text
-/legal review ./msa.pdf
-/legal nda mutual NDA between Acme and Beta for partnership talks
-/legal compliance https://example.com
-```
-
-也可以直接自然语言触发：
-
-```text
-Review this contract and give me the top 3 risks.
-Generate an NDA for a freelance designer working with a startup.
-Audit this website for GDPR and CCPA compliance gaps.
+Review ./msa.pdf and tell me the top 3 legal risks.
+Generate a mutual NDA between Acme and Beta for partnership talks.
+Audit https://example.com for GDPR and CCPA compliance gaps.
 ```
 
 推荐工作流：
 
-1. 先跑 `/legal review <file>`
-2. 再跑 `/legal negotiate <file>` 获取可直接回发的修改语言
-3. 最后跑 `/legal report-pdf` 生成正式交付版 PDF
+1. 先让 Codex 完整审查合同并输出风险摘要
+2. 再让 Codex 生成可直接回发的修改语言
+3. 最后让 Codex 把最新分析导出成正式 PDF
 
 ---
 
-## All 14 Commands
+## All 14 Capabilities
 
 ### Contract Analysis
-| Command | What It Does |
+| What To Ask Codex | What It Does |
 |---------|-------------|
-| `/legal review <file>` | **Flagship** — Full contract review across 5 legal analysis lenses. Returns a Contract Safety Score, clause-by-clause analysis, and prioritized recommendations. |
-| `/legal risks <file>` | Deep risk analysis with severity scoring for every clause. Estimates financial exposure. |
-| `/legal compare <file1> <file2>` | Side-by-side comparison of two contract versions. Flags additions, removals, and dangerous changes. |
-| `/legal plain <file>` | Translates every clause from legalese into plain English anyone can understand. |
-| `/legal negotiate <file>` | Generates specific counter-proposals with replacement language for every unfavorable clause. |
-| `/legal missing <file>` | Finds protections that SHOULD be in the contract but aren't. |
+| “Review this contract and give me a full risk report.” | **Flagship** — Full contract review across 5 legal analysis lenses. Returns a Contract Safety Score, clause-by-clause analysis, and prioritized recommendations. |
+| “Analyze the risk level of every clause in this contract.” | Deep risk analysis with severity scoring for every clause. Estimates financial exposure. |
+| “Compare these two contract versions and tell me what changed.” | Side-by-side comparison of two contract versions. Flags additions, removals, and dangerous changes. |
+| “Translate this contract into plain English.” | Translates every clause from legalese into plain English anyone can understand. |
+| “Draft negotiation language for the risky clauses in this contract.” | Generates specific counter-proposals with replacement language for every unfavorable clause. |
+| “Tell me what protections are missing from this contract.” | Finds protections that SHOULD be in the contract but aren't. |
 
 ### Document Generation
-| Command | What It Does |
+| What To Ask Codex | What It Does |
 |---------|-------------|
-| `/legal nda <description>` | Generates a custom NDA — mutual, one-way, employee, or vendor. |
-| `/legal terms <url>` | Generates terms of service based on what the website actually does. GDPR/CCPA compliant. |
-| `/legal privacy <url>` | Generates a privacy policy by scanning what data the site collects. |
-| `/legal agreement <type>` | Generates business agreements — freelancer contracts, partnerships, SOWs, MSAs, and more. |
-| `/legal freelancer <file>` | Specialized review from the freelancer's perspective. Flags common contractor traps. |
+| “Generate a mutual NDA for these two parties.” | Generates a custom NDA — mutual, one-way, employee, or vendor. |
+| “Generate terms of service for this website: [url].” | Generates terms of service based on what the website actually does. GDPR/CCPA compliant. |
+| “Generate a privacy policy for this website: [url].” | Generates a privacy policy by scanning what data the site collects. |
+| “Draft a freelancer agreement / MSA / SOW / partnership agreement.” | Generates business agreements — freelancer contracts, partnerships, SOWs, MSAs, and more. |
+| “Review this contract from the freelancer’s perspective.” | Specialized review from the freelancer's perspective. Flags common contractor traps. |
 
 ### Compliance & Reporting
-| Command | What It Does |
+| What To Ask Codex | What It Does |
 |---------|-------------|
-| `/legal compliance <url>` | Compliance gap analysis — GDPR, CCPA, ADA, PCI-DSS, CAN-SPAM, SOC 2. |
-| `/legal report-pdf` | Professional PDF report with score gauges, risk charts, and prioritized actions. |
+| “Audit this website for compliance gaps: [url].” | Compliance gap analysis — GDPR, CCPA, ADA, PCI-DSS, CAN-SPAM, SOC 2. |
+| “Turn the latest legal analysis into a PDF report.” | Professional PDF report with score gauges, risk charts, and prioritized actions. |
 
 ---
 
@@ -119,9 +111,9 @@ Audit this website for GDPR and CCPA compliance gaps.
 
 ---
 
-## The Flagship: `/legal review`
+## The Flagship: Full Contract Review
 
-The most powerful command. Run it on any contract and get:
+The most powerful workflow. Ask Codex to review any contract and get:
 
 1. **Contract Safety Score** (0-100) with letter grade
 2. **Risk Dashboard** — high/medium/low risk clause counts
@@ -134,8 +126,8 @@ The most powerful command. Run it on any contract and get:
 
 ### How It Works
 
-```
-/legal review my-contract.pdf
+```text
+Review my-contract.pdf and produce a full legal risk report with a contract safety score.
 ```
 
 Codex 版会默认按 5 个分析视角完成完整审查；如果你的宿主环境明确允许并行子代理，也可以把这 5 个视角并行执行：
@@ -160,7 +152,7 @@ Results are aggregated into a unified report with a single Contract Safety Score
 - 安装目标统一为 `~/.codex/skills`
 - PDF 脚本和模板会随 `legal-report-pdf` 一起安装
 - 完整合同审查默认按 5 个分析视角运行，不强依赖并行子代理
-- 既支持 `/legal ...` 命令，也支持自然语言触发
+- README 默认使用自然语言触发示例，不依赖 slash command 约定
 
 ---
 

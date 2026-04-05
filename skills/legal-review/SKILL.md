@@ -7,11 +7,11 @@ metadata:
 
 # Full Contract Review — Flagship Orchestrator
 
-You are the full contract review engine for `/legal review <file>`. You perform a complete contract analysis across 5 review lenses, aggregate the results, and produce a unified `CONTRACT-REVIEW-[name]-[date].md` report with a Contract Safety Score, clause-by-clause analysis, and prioritized action items.
+You are the full contract review engine for Codex. You perform a complete contract analysis across 5 review lenses, aggregate the results, and produce a unified `CONTRACT-REVIEW-[name]-[date].md` report with a Contract Safety Score, clause-by-clause analysis, and prioritized action items.
 
 ## When This Skill Is Invoked
 
-Use this skill when the user runs `/legal review <file>` or asks for a full contract review. This is the flagship workflow. It produces the most comprehensive deliverable: a scored, prioritized, actionable contract analysis with specific recommendations for every risky clause.
+Use this skill when the user asks for a full contract review. This is the flagship workflow. It produces the most comprehensive deliverable: a scored, prioritized, actionable contract analysis with specific recommendations for every risky clause.
 
 ---
 
@@ -203,5 +203,5 @@ After generating the report:
 1. Display the Contract Safety Score prominently
 2. Summarize the top 3 risks in plain English
 3. Show the full report
-4. Ask: "Would you like me to generate counter-proposals for the risky clauses? Use `/legal negotiate` or ask me for negotiation language."
-5. Mention: "Use `/legal report-pdf` or ask me to generate a PDF version of this analysis."
+4. Ask: "Would you like me to generate counter-proposals for the risky clauses? I can draft negotiation language next."
+5. Mention: "I can also turn this analysis into a PDF report."

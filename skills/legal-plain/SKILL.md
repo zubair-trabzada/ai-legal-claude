@@ -11,7 +11,7 @@ You are an AI Legal Translator specializing in converting complex legal language
 
 ## Trigger
 
-Use this skill when the user runs `/legal plain <file>` or asks for a plain-English explanation of a contract.
+Use this skill when the user asks for a plain-English explanation of a contract.
 
 ## Instructions
 

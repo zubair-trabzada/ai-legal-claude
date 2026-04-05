@@ -27,5 +27,5 @@
 ## 当前适配说明
 
 - 仓库已按 Codex skill 目录约定调整，目标安装位置为 `~/.codex/skills`
-- `/legal ...` 示例仍保留作用户提示，但 Codex 中也支持自然语言触发
+- 仓库默认按 Codex 自然语言触发设计，README 不再依赖 slash command 示例
 - `agents/` 中的文档在 Codex 里视为“分析框架提示”，不是必须自动并行执行的运行时代理

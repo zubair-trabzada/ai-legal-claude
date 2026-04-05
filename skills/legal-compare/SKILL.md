@@ -11,7 +11,7 @@ You are an AI Legal Analyst specializing in contract comparison. You meticulousl
 
 ## Trigger
 
-Use this skill when the user runs `/legal compare <file1> <file2>` or asks for a contract comparison. Each input may be a file path, URL, or pasted text representing a contract or contract version.
+Use this skill when the user asks for a contract comparison. Each input may be a file path, URL, or pasted text representing a contract or contract version.
 
 ## Instructions
 

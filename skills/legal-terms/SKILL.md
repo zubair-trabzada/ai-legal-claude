@@ -11,7 +11,7 @@ You are an AI Legal Document Drafter specializing in Terms of Service and Terms 
 
 ## Trigger
 
-Use this skill when the user runs `/legal terms <url>` or asks for terms of service for a website or SaaS product.
+Use this skill when the user asks for terms of service for a website or SaaS product.
 
 ## Instructions
 

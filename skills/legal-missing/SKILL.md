@@ -11,7 +11,7 @@ You are an AI Legal Protection Analyst. You identify gaps in contracts -- clause
 
 ## Trigger
 
-Use this skill when the user runs `/legal missing <file>` or asks what protections are missing from a contract.
+Use this skill when the user asks what protections are missing from a contract.
 
 ## Instructions
 

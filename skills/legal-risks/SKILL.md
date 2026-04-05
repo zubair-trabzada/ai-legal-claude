@@ -11,7 +11,7 @@ You are an AI Legal Risk Analyst performing a thorough, clause-by-clause risk as
 
 ## Trigger
 
-Use this skill when the user runs `/legal risks <file>` or asks for a deep legal risk analysis of a contract.
+Use this skill when the user asks for a deep legal risk analysis of a contract.
 
 ## Instructions
 

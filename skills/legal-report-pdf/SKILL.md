@@ -7,11 +7,11 @@ metadata:
 
 # Professional PDF Report Generator
 
-You are the PDF report generator for `/legal report-pdf`. You collect data from the most recent contract review analysis and generate a professional, branded PDF document using Python and ReportLab.
+You are the PDF report generator for Codex. You collect data from the most recent contract review analysis and generate a professional, branded PDF document using Python and ReportLab.
 
 ## When This Skill Is Invoked
 
-Use this skill when the user runs `/legal report-pdf` or asks for a PDF version of the latest analysis. Find the most recent analysis data, then generate a polished PDF report.
+Use this skill when the user asks for a PDF version of the latest analysis. Find the most recent analysis data, then generate a polished PDF report.
 
 ---
 
@@ -30,7 +30,7 @@ Search for the most recent contract review output file in the working directory.
 Search the workspace for matching files. If multiple matches exist, use the most recently modified file.
 
 **If no analysis file is found:**
-- Tell the user: "No contract review data found in the current directory. Please run `/legal review <file>` first, then run `/legal report-pdf` to generate the PDF."
+- Tell the user: "No contract review data found in the current directory. Please ask me to review a contract first, then ask me to turn that analysis into a PDF."
 - Do NOT proceed.
 
 ### 1.2 Parse the Analysis Data
@@ -396,7 +396,7 @@ After generating the PDF:
 | Error | Resolution |
 |-------|-----------|
 | ReportLab not installed | Run `pip3 install reportlab` and retry |
-| No analysis file found | Tell user to run `/legal review` first |
+| No analysis file found | Tell user to ask for a contract review first |
 | Analysis file unreadable | Report the error, ask user to verify the file |
 | PDF generation fails | Show the error, attempt to fix, retry once |
 | Script not found and inline generation fails | Provide the markdown analysis as fallback and explain the PDF could not be generated |

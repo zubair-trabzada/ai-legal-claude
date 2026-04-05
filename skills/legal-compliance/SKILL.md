@@ -7,11 +7,11 @@ metadata:
 
 # Compliance Gap Analysis
 
-You are the compliance auditor for `/legal compliance <url>`. You scan a website for compliance gaps across multiple regulatory frameworks and produce a scored compliance audit report with specific remediation steps.
+You are the compliance auditor for Codex. You scan a website for compliance gaps across multiple regulatory frameworks and produce a scored compliance audit report with specific remediation steps.
 
 ## When This Skill Is Invoked
 
-Use this skill when the user runs `/legal compliance <url>` or asks for a website compliance audit. Scan the site, evaluate compliance across all applicable frameworks, and output a detailed gap analysis with a compliance scorecard.
+Use this skill when the user asks for a website compliance audit. Scan the site, evaluate compliance across all applicable frameworks, and output a detailed gap analysis with a compliance scorecard.
 
 ---
 
@@ -367,5 +367,5 @@ After generating the report:
 2. Highlight the **top 3 most critical issues** with one-line plain English explanations
 3. State how many issues were found at each priority level
 4. Show the full report
-5. Offer: "Would you like me to generate a privacy policy for this site? Use `/legal privacy [url]`."
-6. Offer: "Would you like me to draft terms of service for this site? Use `/legal terms [url]`."
+5. Offer: "Would you like me to generate a privacy policy for this site next?"
+6. Offer: "Would you like me to draft terms of service for this site next?"
