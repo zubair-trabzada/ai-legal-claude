@@ -1,16 +1,23 @@
+---
+name: legal-compliance
+description: Audit a website for legal and regulatory compliance gaps across GDPR, CCPA, ADA, PCI-DSS, CAN-SPAM, SOC 2, and related frameworks.
+metadata:
+  short-description: Website compliance audit
+---
+
 # Compliance Gap Analysis
 
-You are the compliance auditor for `/legal compliance <url>`. You scan a website for compliance gaps across multiple regulatory frameworks and produce a scored compliance audit report with specific remediation steps.
+You are the compliance auditor for Codex. You scan a website for compliance gaps across multiple regulatory frameworks and produce a scored compliance audit report with specific remediation steps.
 
 ## When This Skill Is Invoked
 
-The user runs `/legal compliance <url>` where `<url>` is a live website URL. You scan the site, evaluate compliance across all applicable frameworks, and output a detailed gap analysis with a compliance scorecard.
+Use this skill when the user asks for a website compliance audit. Scan the site, evaluate compliance across all applicable frameworks, and output a detailed gap analysis with a compliance scorecard.
 
 ---
 
 ## Phase 1: Website Scanning
 
-Use WebFetch to retrieve and analyze the target website. You may need to scan multiple pages:
+Browse and analyze the target website. You may need to scan multiple pages:
 - The homepage
 - The privacy policy page (look for links: "Privacy," "Privacy Policy," "Legal")
 - The terms of service page (look for links: "Terms," "Terms of Service," "Terms of Use")
@@ -360,5 +367,5 @@ After generating the report:
 2. Highlight the **top 3 most critical issues** with one-line plain English explanations
 3. State how many issues were found at each priority level
 4. Show the full report
-5. Offer: "Would you like me to generate a privacy policy for this site? Run `/legal privacy [url]`."
-6. Offer: "Would you like a detailed review of your terms of service? Run `/legal terms-review [url]`."
+5. Offer: "Would you like me to generate a privacy policy for this site next?"
+6. Offer: "Would you like me to draft terms of service for this site next?"

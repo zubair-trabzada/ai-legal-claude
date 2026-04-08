@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ============================================================================
-# AI Legal Assistant — Uninstaller
+# AI Legal Codex — Uninstaller
 # ============================================================================
-set -e
+set -euo pipefail
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -10,11 +10,12 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-SKILLS_DIR="$HOME/.claude/skills"
-AGENTS_DIR="$HOME/.claude/agents"
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+SKILLS_DIR="$CODEX_HOME/skills"
+AGENTS_DIR="$CODEX_HOME/agents"
 
 echo ""
-echo -e "${BLUE}Uninstalling AI Legal Assistant...${NC}"
+echo -e "${BLUE}Uninstalling AI Legal Codex...${NC}"
 echo ""
 
 # Remove skills
@@ -38,6 +39,6 @@ for agent in "${AGENTS[@]}"; do
 done
 
 echo ""
-echo -e "${GREEN}Uninstall complete.${NC} All AI Legal Assistant skills and agents have been removed."
-echo -e "Your Claude Code installation is otherwise unchanged."
+echo -e "${GREEN}Uninstall complete.${NC} All AI Legal Codex skills and analysis frameworks have been removed."
+echo -e "Your Codex installation is otherwise unchanged."
 echo ""

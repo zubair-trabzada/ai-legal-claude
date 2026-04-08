@@ -1,10 +1,17 @@
+---
+name: legal-report-pdf
+description: Generate a professional PDF report from the latest legal review markdown output, using the bundled ReportLab script when available.
+metadata:
+  short-description: PDF legal report generator
+---
+
 # Professional PDF Report Generator
 
-You are the PDF report generator for `/legal report-pdf`. You collect data from the most recent contract review analysis and generate a professional, branded PDF document using Python and ReportLab.
+You are the PDF report generator for Codex. You collect data from the most recent contract review analysis and generate a professional, branded PDF document using Python and ReportLab.
 
 ## When This Skill Is Invoked
 
-The user runs `/legal report-pdf` after having completed a contract review (via `/legal review`, `/legal freelancer`, or other analysis commands). You find the most recent analysis data, then generate a polished PDF report.
+Use this skill when the user asks for a PDF version of the latest analysis. Find the most recent analysis data, then generate a polished PDF report.
 
 ---
 
@@ -20,10 +27,10 @@ Search for the most recent contract review output file in the working directory.
 4. `NDA-REVIEW-*.md`
 5. Any `.md` file containing "Contract Safety Score" or "Freelancer Fairness Score" or "Compliance Scorecard"
 
-Use the Glob tool to find matching files. If multiple matches exist, use the most recently modified file.
+Search the workspace for matching files. If multiple matches exist, use the most recently modified file.
 
 **If no analysis file is found:**
-- Tell the user: "No contract review data found in the current directory. Please run `/legal review <file>` first, then run `/legal report-pdf` to generate the PDF."
+- Tell the user: "No contract review data found in the current directory. Please ask me to review a contract first, then ask me to turn that analysis into a PDF."
 - Do NOT proceed.
 
 ### 1.2 Parse the Analysis Data
@@ -54,18 +61,19 @@ Read the analysis file and extract:
 
 Search for the PDF generation Python script in these locations (in order):
 
-1. `[working directory]/ai-legal-claude/scripts/generate_pdf_report.py`
-2. `[working directory]/scripts/generate_pdf_report.py`
-3. `../scripts/generate_pdf_report.py` (one level up from working directory)
+1. `~/.codex/skills/legal-report-pdf/scripts/generate_legal_pdf.py`
+2. `[repo root]/scripts/generate_legal_pdf.py`
+3. `[working directory]/scripts/generate_legal_pdf.py`
+4. `../scripts/generate_legal_pdf.py` (one level up from working directory)
 
-Use the Glob tool to search for `**/generate_pdf_report.py` within the project.
+Search for `generate_legal_pdf.py` within the workspace if the installed bundle path is unavailable.
 
 ### 2.2 If Script Found
 
-Run the script, passing it the path to the analysis markdown file:
+Run the script after converting the analysis markdown into a temporary JSON payload that matches the script's expected schema:
 
 ```bash
-python3 [script_path] --input [analysis_file_path] --output CONTRACT-REVIEW-REPORT.pdf
+python3 [script_path] [temp_json_path] CONTRACT-REVIEW-REPORT.pdf
 ```
 
 ### 2.3 If Script Not Found — Generate Inline
@@ -324,7 +332,7 @@ creators of this tool accept no liability for actions taken based
 on this analysis.
 
 Generated: [date and time]
-Tool: AI Legal Assistant — Claude Code
+Tool: AI Legal Codex
 ```
 
 ### 3.13 Page Footer (All Pages Except Cover)
@@ -332,7 +340,7 @@ Tool: AI Legal Assistant — Claude Code
 Every page after the cover should have:
 
 ```
-[Left: "AI Legal Assistant — Contract Review Report"]
+[Left: "AI Legal Codex — Contract Review Report"]
 [Center: "CONFIDENTIAL"]
 [Right: "Page X of Y"]
 ```
@@ -359,7 +367,7 @@ Write a complete Python script that:
 Run the script using Bash:
 
 ```bash
-cd [working directory] && python3 /tmp/generate_legal_pdf.py --input "[analysis_file]" --output "CONTRACT-REVIEW-REPORT.pdf"
+cd [working directory] && python3 /tmp/generate_legal_pdf.py "[temp_json_file]" "CONTRACT-REVIEW-REPORT.pdf"
 ```
 
 ### 4.3 Verify Output
@@ -388,7 +396,7 @@ After generating the PDF:
 | Error | Resolution |
 |-------|-----------|
 | ReportLab not installed | Run `pip3 install reportlab` and retry |
-| No analysis file found | Tell user to run `/legal review` first |
+| No analysis file found | Tell user to ask for a contract review first |
 | Analysis file unreadable | Report the error, ask user to verify the file |
 | PDF generation fails | Show the error, attempt to fix, retry once |
 | Script not found and inline generation fails | Provide the markdown analysis as fallback and explain the PDF could not be generated |

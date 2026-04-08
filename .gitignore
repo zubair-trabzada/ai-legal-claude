@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+*.log
+
+# Local output artifacts
+CONTRACT-REVIEW-*.md
+CONTRACT-COMPARISON-*.md
+FREELANCER-REVIEW-*.md
+COMPLIANCE-AUDIT-*.md
+NDA-*.md
+TERMS-OF-SERVICE-*.md
+PRIVACY-POLICY-*.md
+CONTRACT-REVIEW-REPORT*.pdf
+*.tmp.json

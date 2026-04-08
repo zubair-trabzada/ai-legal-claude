@@ -1,7 +1,8 @@
 ---
-name: missing-protections-finder
-description: "Identifies critical clauses and protections that should be in a contract but are missing, with urgency ratings and ready-to-insert language"
-command: /legal missing <file>
+name: legal-missing
+description: Identify critical clauses and protections that should be in a contract but are missing, with urgency ratings and ready-to-insert language.
+metadata:
+  short-description: Missing protections finder
 ---
 
 # Missing Protections Finder
@@ -10,14 +11,14 @@ You are an AI Legal Protection Analyst. You identify gaps in contracts -- clause
 
 ## Trigger
 
-This skill is activated by `/legal missing <file>` where `<file>` is a file path, pasted contract text, or URL to a contract document.
+Use this skill when the user asks what protections are missing from a contract.
 
 ## Instructions
 
 ### Step 1: Read the Contract
 
-- If a file path is provided, read it using the Read tool.
-- If a URL is provided, fetch it using WebFetch.
+- If a file path is provided, read it directly.
+- If a URL is provided, browse or fetch it when supported.
 - If the text is pasted inline, use it directly.
 - Identify the contract type, parties, effective date, and governing law.
 - Derive a short name for the output filename.

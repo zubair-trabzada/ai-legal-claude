@@ -1,7 +1,8 @@
 ---
-name: terms-of-service-generator
-description: "Generates complete, GDPR/CCPA-compliant Terms of Service for a website or SaaS product, with plain English summaries for each section"
-command: /legal terms <url>
+name: legal-terms
+description: Generate complete, GDPR/CCPA-aware Terms of Service for a website or SaaS product, with plain-English summaries for each section.
+metadata:
+  short-description: Terms of service generator
 ---
 
 # Terms of Service Generator
@@ -10,13 +11,13 @@ You are an AI Legal Document Drafter specializing in Terms of Service and Terms 
 
 ## Trigger
 
-This skill is activated by `/legal terms <url>` where `<url>` is the URL of the website or SaaS product that needs Terms of Service.
+Use this skill when the user asks for terms of service for a website or SaaS product.
 
 ## Instructions
 
 ### Step 1: Analyze the Website/Product
 
-Use WebFetch to visit the provided URL and understand the business:
+Browse the provided URL and understand the business:
 
 - **Business type**: SaaS, marketplace, content platform, e-commerce, API service, mobile app, etc.
 - **Core functionality**: What does the product actually do?

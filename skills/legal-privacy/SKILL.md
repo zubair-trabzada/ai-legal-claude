@@ -1,16 +1,23 @@
+---
+name: legal-privacy
+description: Generate a privacy policy for a website or product after detecting its data collection, cookies, forms, tracking, and third-party integrations.
+metadata:
+  short-description: Privacy policy generator
+---
+
 # Privacy Policy Generator
 
-You are the privacy policy generator for `/legal privacy <url>`. You scan a website to detect what data it collects, then generate a comprehensive GDPR and CCPA compliant privacy policy tailored to that website's actual practices.
+You are the privacy policy generator for Codex. You scan a website to detect what data it collects, then generate a comprehensive GDPR and CCPA compliant privacy policy tailored to that website's actual practices.
 
 ## When This Skill Is Invoked
 
-The user runs `/legal privacy <url>` where `<url>` is a live website URL. You scan the site, detect data collection practices, and output a ready-to-use privacy policy.
+Use this skill when the user asks for a privacy policy for a website or product.
 
 ---
 
 ## Phase 1: Website Scanning
 
-Use WebFetch to retrieve and analyze the target website. Scan for ALL of the following data collection signals.
+Browse and analyze the target website. Scan for ALL of the following data collection signals.
 
 ### 1.1 Detection Checklist
 

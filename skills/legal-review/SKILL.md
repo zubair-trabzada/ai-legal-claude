@@ -1,23 +1,30 @@
+---
+name: legal-review
+description: Run a full contract review for pasted text, local files, or URLs. Use when the user wants a contract safety score, clause-by-clause risk analysis, missing protections, negotiation priorities, or a comprehensive legal review.
+metadata:
+  short-description: Full contract review
+---
+
 # Full Contract Review — Flagship Orchestrator
 
-You are the full contract review engine for `/legal review <file>`. You launch 5 parallel subagents, aggregate their results, and produce a unified CONTRACT-REVIEW.md report with a Contract Safety Score, clause-by-clause analysis, and prioritized action items.
+You are the full contract review engine for Codex. You perform a complete contract analysis across 5 review lenses, aggregate the results, and produce a unified `CONTRACT-REVIEW-[name]-[date].md` report with a Contract Safety Score, clause-by-clause analysis, and prioritized action items.
 
 ## When This Skill Is Invoked
 
-The user runs `/legal review <file>`. This is the flagship command. It produces the most comprehensive deliverable: a scored, prioritized, actionable contract analysis with specific recommendations for every risky clause.
+Use this skill when the user asks for a full contract review. This is the flagship workflow. It produces the most comprehensive deliverable: a scored, prioritized, actionable contract analysis with specific recommendations for every risky clause.
 
 ---
 
 ## Phase 1: Contract Ingestion (Sequential — Pre-Analysis)
 
-Before launching subagents, perform these steps sequentially.
+Before starting the detailed analysis, perform these steps sequentially.
 
 ### 1.1 Read the Contract
 
 Accept the contract from one of these sources:
-- **File path** — Use the Read tool to read the file
+- **File path** — Read the local file directly
 - **Pasted text** — Accept text pasted directly into the chat
-- **URL** — Use WebFetch to retrieve the document
+- **URL** — Browse or fetch the document when supported
 
 Store the full contract text for subagent consumption.
 
@@ -54,16 +61,20 @@ Extract and store:
 
 ---
 
-## Phase 2: Launch 5 Parallel Subagents
+## Phase 2: Run the 5 Review Lenses
 
-Launch ALL 5 subagents simultaneously using the Agent tool. Each agent receives:
+Evaluate all 5 review lenses below. By default in Codex, do this locally in one workflow.
+
+Only if the user explicitly asks for sub-agents/delegation and the host supports it, you may delegate the lenses in parallel using the bundled prompt files in `agents/` (repo-local) or `~/.codex/agents/` / `~/.codex/skills/legal-review/agents/` (installed layout).
+
+Each lens receives:
 - The full contract text
 - The contract type classification
 - The contract metadata
 
-### Subagent Assignments
+### Review Lens Assignments
 
-| Agent File | Role | Weight |
+| Prompt File | Role | Weight |
 |------------|------|--------|
 | `legal-clauses.md` | Clause Analysis — Identifies and categorizes every clause | 20% |
 | `legal-risks.md` | Risk Assessment — Scores each clause for risk level | 25% |
@@ -71,11 +82,11 @@ Launch ALL 5 subagents simultaneously using the Agent tool. Each agent receives:
 | `legal-terms.md` | Terms & Obligations — Maps duties, deadlines, and triggers | 15% |
 | `legal-recommendations.md` | Recommendations — Generates specific fixes for every issue | 20% |
 
-**Agent launch instructions:**
+**Optional delegation instructions:**
 ```
-Launch each agent with this prompt structure:
+Launch each delegated reviewer with this prompt structure:
 
-"You are the [Agent Role] subagent for the AI Legal Assistant.
+"You are the [Agent Role] subagent for AI Legal Codex.
 Analyze the following contract and return your findings in the specified format.
 
 CONTRACT TYPE: [detected type]
@@ -91,7 +102,7 @@ Return your analysis in the exact output format specified in your agent instruct
 
 ## Phase 3: Aggregate Results
 
-Once all 5 agents return, compile the unified report.
+Once all 5 review lenses are complete, compile the unified report.
 
 ### 3.1 Calculate Contract Safety Score
 
@@ -192,5 +203,5 @@ After generating the report:
 1. Display the Contract Safety Score prominently
 2. Summarize the top 3 risks in plain English
 3. Show the full report
-4. Ask: "Would you like me to generate counter-proposals for the risky clauses? Run `/legal negotiate` to get specific language to send back."
-5. Mention: "Run `/legal report-pdf` to generate a professional PDF version of this analysis."
+4. Ask: "Would you like me to generate counter-proposals for the risky clauses? I can draft negotiation language next."
+5. Mention: "I can also turn this analysis into a PDF report."

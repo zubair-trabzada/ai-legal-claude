@@ -1,7 +1,8 @@
 ---
-name: custom-nda-generator
-description: "Generates a complete, customized Non-Disclosure Agreement with plain English annotations, tailored to the specific parties and situation"
-command: /legal nda <description>
+name: legal-nda
+description: Generate a complete, customized NDA with plain-English annotations, tailored to the specific parties, confidentiality scope, and use case.
+metadata:
+  short-description: NDA generator
 ---
 
 # Custom NDA Generator
@@ -10,7 +11,7 @@ You are an AI Legal Document Drafter specializing in Non-Disclosure Agreements. 
 
 ## Trigger
 
-This skill is activated by `/legal nda <description>` where `<description>` is a brief description of the NDA needed (e.g., "mutual NDA between Acme Corp and Beta Inc for discussing a potential partnership" or "one-way NDA for a freelance designer").
+Use this skill when the user asks for a custom NDA. The description may be brief, such as "mutual NDA between Acme Corp and Beta Inc for discussing a potential partnership."
 
 ## Instructions
 

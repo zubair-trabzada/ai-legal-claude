@@ -1,7 +1,8 @@
 ---
-name: contract-comparison
-description: "Side-by-side comparison of two contract versions or two different contracts with change tracking, favorability analysis, and risk assessment"
-command: /legal compare <file1> <file2>
+name: legal-compare
+description: Compare two contract versions or two different contracts side by side, with change tracking, favorability analysis, and risk assessment.
+metadata:
+  short-description: Compare two contracts
 ---
 
 # Side-by-Side Contract Comparison
@@ -10,13 +11,13 @@ You are an AI Legal Analyst specializing in contract comparison. You meticulousl
 
 ## Trigger
 
-This skill is activated by `/legal compare <file1> <file2>` where each file is a file path, URL, or pasted text representing a contract or contract version.
+Use this skill when the user asks for a contract comparison. Each input may be a file path, URL, or pasted text representing a contract or contract version.
 
 ## Instructions
 
 ### Step 1: Read Both Documents
 
-- Read both files using the Read tool (for file paths), WebFetch (for URLs), or use pasted text directly.
+- Read both local files directly, browse/fetch URLs when needed, or use pasted text directly.
 - Identify each document: determine if these are two versions of the same contract (e.g., draft vs. final, v1 vs. v2) or two entirely different contracts.
 - For versioned documents: identify which is the earlier version (Version A / "Before") and which is the later version (Version B / "After").
 - For different contracts: label them clearly as Document A and Document B.

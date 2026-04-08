@@ -1,7 +1,8 @@
 ---
-name: plain-english-translation
-description: "Translates every clause of a contract from legalese into clear, plain English with flags for deliberately confusing or misleading language"
-command: /legal plain <file>
+name: legal-plain
+description: Translate every clause of a contract from legalese into clear, plain English, while flagging confusing, misleading, or unusually broad language.
+metadata:
+  short-description: Plain-English contract translation
 ---
 
 # Plain English Translation
@@ -10,14 +11,14 @@ You are an AI Legal Translator specializing in converting complex legal language
 
 ## Trigger
 
-This skill is activated by `/legal plain <file>` where `<file>` is a file path, pasted contract text, or URL to a contract document.
+Use this skill when the user asks for a plain-English explanation of a contract.
 
 ## Instructions
 
 ### Step 1: Read the Contract
 
-- If a file path is provided, read it using the Read tool.
-- If a URL is provided, fetch it using WebFetch.
+- If a file path is provided, read it directly.
+- If a URL is provided, browse or fetch it when supported.
 - If the text is pasted inline, use it directly.
 - Identify the contract type, parties, and the general purpose of the agreement.
 - Derive a short name for the contract (e.g., "Acme-SaaS-Agreement" or "Employment-Contract") to use in the output filename.

@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ============================================================================
-# AI Legal Assistant — Claude Code Skills Installer
-# 14 Skills · 5 Agents · PDF Reports
+# AI Legal Codex — Skills Installer
+# 14 Skills · 5 Analysis Frameworks · PDF Reports
 # ============================================================================
-set -e
+set -euo pipefail
 
 # Colors
 RED='\033[0;31m'
@@ -16,8 +16,8 @@ NC='\033[0m'
 echo ""
 echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║                                                              ║${NC}"
-echo -e "${BLUE}║${NC}   ${CYAN}AI Legal Assistant — Claude Code Skills${NC}                   ${BLUE}║${NC}"
-echo -e "${BLUE}║${NC}   ${GREEN}14 Skills · 5 Agents · PDF Reports${NC}                       ${BLUE}║${NC}"
+echo -e "${BLUE}║${NC}   ${CYAN}AI Legal Codex — Skills${NC}                                   ${BLUE}║${NC}"
+echo -e "${BLUE}║${NC}   ${GREEN}14 Skills · 5 Analysis Frameworks · PDF Reports${NC}          ${BLUE}║${NC}"
 echo -e "${BLUE}║                                                              ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo ""
@@ -25,7 +25,7 @@ echo ""
 # ---------------------------------------------------------------------------
 # Detect script directory (handle both local and curl | bash)
 # ---------------------------------------------------------------------------
-GITHUB_REPO="zubair-trabzada/ai-legal-claude"
+GITHUB_REPO="${GITHUB_REPO:-pa4uslf/ai-legal-codex}"
 TEMP_DIR=""
 
 if [ -n "${BASH_SOURCE[0]}" ] && [ "${BASH_SOURCE[0]}" != "bash" ]; then
@@ -55,29 +55,29 @@ fi
 # ---------------------------------------------------------------------------
 # Target directories
 # ---------------------------------------------------------------------------
-SKILLS_DIR="$HOME/.claude/skills"
-AGENTS_DIR="$HOME/.claude/agents"
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+SKILLS_DIR="$CODEX_HOME/skills"
+AGENTS_DIR="$CODEX_HOME/agents"
 
 # ---------------------------------------------------------------------------
-# Check for Claude Code
+# Check for Codex
 # ---------------------------------------------------------------------------
 echo -e "${BLUE}Checking prerequisites...${NC}"
-if command -v claude &>/dev/null; then
-    echo -e "  ${GREEN}✓${NC} Claude Code found"
+if command -v codex &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} Codex CLI found"
 else
-    echo -e "  ${YELLOW}⚠${NC} Claude Code CLI not found (skills will still be installed)"
+    echo -e "  ${YELLOW}⚠${NC} Codex CLI not found (skills will still be installed)"
 fi
 
 # ---------------------------------------------------------------------------
 # Create directories
 # ---------------------------------------------------------------------------
 echo -e "${BLUE}Creating directories...${NC}"
-mkdir -p "$SKILLS_DIR/legal/scripts"
-mkdir -p "$SKILLS_DIR/legal/templates"
+mkdir -p "$SKILLS_DIR"
 echo -e "  ${GREEN}✓${NC} Skills directory ready"
 
 mkdir -p "$AGENTS_DIR"
-echo -e "  ${GREEN}✓${NC} Agents directory ready"
+echo -e "  ${GREEN}✓${NC} Analysis framework directory ready"
 
 # ---------------------------------------------------------------------------
 # Install main skill orchestrator
@@ -87,6 +87,7 @@ echo -e "${BLUE}Installing skills...${NC}"
 INSTALL_COUNT=0
 
 if [ -f "$SOURCE_DIR/legal/SKILL.md" ]; then
+    mkdir -p "$SKILLS_DIR/legal"
     cp "$SOURCE_DIR/legal/SKILL.md" "$SKILLS_DIR/legal/SKILL.md"
     echo -e "  ${GREEN}✓${NC} legal (orchestrator)"
     INSTALL_COUNT=$((INSTALL_COUNT + 1))
@@ -123,9 +124,9 @@ for skill in "${SKILLS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
-# Install 5 agents
+# Install 5 analysis frameworks
 # ---------------------------------------------------------------------------
-echo -e "${BLUE}Installing agents...${NC}"
+echo -e "${BLUE}Installing analysis frameworks...${NC}"
 
 AGENT_COUNT=0
 AGENTS=(
@@ -138,6 +139,8 @@ AGENTS=(
 
 for agent in "${AGENTS[@]}"; do
     if [ -f "$SOURCE_DIR/agents/$agent.md" ]; then
+        mkdir -p "$SKILLS_DIR/legal-review/agents"
+        cp "$SOURCE_DIR/agents/$agent.md" "$SKILLS_DIR/legal-review/agents/$agent.md"
         cp "$SOURCE_DIR/agents/$agent.md" "$AGENTS_DIR/$agent.md"
         echo -e "  ${GREEN}✓${NC} $agent"
         AGENT_COUNT=$((AGENT_COUNT + 1))
@@ -147,14 +150,15 @@ for agent in "${AGENTS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
-# Install Python scripts
+# Install Python scripts for PDF generation
 # ---------------------------------------------------------------------------
 echo -e "${BLUE}Installing scripts...${NC}"
 
 SCRIPT_COUNT=0
+mkdir -p "$SKILLS_DIR/legal-report-pdf/scripts"
 for script in "$SOURCE_DIR"/scripts/*.py; do
     if [ -f "$script" ]; then
-        cp "$script" "$SKILLS_DIR/legal/scripts/"
+        cp "$script" "$SKILLS_DIR/legal-report-pdf/scripts/"
         echo -e "  ${GREEN}✓${NC} $(basename "$script")"
         SCRIPT_COUNT=$((SCRIPT_COUNT + 1))
     fi
@@ -166,9 +170,10 @@ done
 echo -e "${BLUE}Installing templates...${NC}"
 
 TEMPLATE_COUNT=0
+mkdir -p "$SKILLS_DIR/legal-report-pdf/templates"
 for template in "$SOURCE_DIR"/templates/*.md; do
     if [ -f "$template" ]; then
-        cp "$template" "$SKILLS_DIR/legal/templates/"
+        cp "$template" "$SKILLS_DIR/legal-report-pdf/templates/"
         echo -e "  ${GREEN}✓${NC} $(basename "$template")"
         TEMPLATE_COUNT=$((TEMPLATE_COUNT + 1))
     fi
@@ -210,29 +215,30 @@ echo -e "${GREEN}║  Installation Complete!                                    
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${CYAN}Skills:${NC}    $INSTALL_COUNT installed  →  $SKILLS_DIR"
-echo -e "  ${CYAN}Agents:${NC}    $AGENT_COUNT installed  →  $AGENTS_DIR"
-echo -e "  ${CYAN}Scripts:${NC}   $SCRIPT_COUNT installed  →  $SKILLS_DIR/legal/scripts"
-echo -e "  ${CYAN}Templates:${NC} $TEMPLATE_COUNT installed  →  $SKILLS_DIR/legal/templates"
+echo -e "  ${CYAN}Frameworks:${NC} $AGENT_COUNT installed  →  $AGENTS_DIR"
+echo -e "  ${CYAN}Scripts:${NC}   $SCRIPT_COUNT installed  →  $SKILLS_DIR/legal-report-pdf/scripts"
+echo -e "  ${CYAN}Templates:${NC} $TEMPLATE_COUNT installed  →  $SKILLS_DIR/legal-report-pdf/templates"
 echo ""
 
 # ---------------------------------------------------------------------------
-# Command reference
+# Capability reference
 # ---------------------------------------------------------------------------
-echo -e "${BLUE}Command Reference:${NC}"
+echo -e "${BLUE}Capability Examples:${NC}"
 echo ""
-echo -e "  ${CYAN}/legal review <file>${NC}            Full contract review (5 agents)"
-echo -e "  ${CYAN}/legal risks <file>${NC}             Deep risk analysis"
-echo -e "  ${CYAN}/legal compare <f1> <f2>${NC}        Side-by-side comparison"
-echo -e "  ${CYAN}/legal plain <file>${NC}             Plain English translation"
-echo -e "  ${CYAN}/legal negotiate <file>${NC}         Counter-proposal generator"
-echo -e "  ${CYAN}/legal missing <file>${NC}           Missing protections finder"
-echo -e "  ${CYAN}/legal nda <description>${NC}        Generate custom NDA"
-echo -e "  ${CYAN}/legal terms <url>${NC}              Generate terms of service"
-echo -e "  ${CYAN}/legal privacy <url>${NC}            Generate privacy policy"
-echo -e "  ${CYAN}/legal agreement <type>${NC}         Generate business agreements"
-echo -e "  ${CYAN}/legal freelancer <file>${NC}        Freelancer contract review"
-echo -e "  ${CYAN}/legal compliance <url>${NC}         Compliance gap analysis"
-echo -e "  ${CYAN}/legal report-pdf${NC}               Professional PDF report"
+echo -e "  ${CYAN}Review this contract and give me a full risk report${NC}"
+echo -e "  ${CYAN}Analyze the risk level of every clause in this contract${NC}"
+echo -e "  ${CYAN}Compare these two contract versions and tell me what changed${NC}"
+echo -e "  ${CYAN}Translate this contract into plain English${NC}"
+echo -e "  ${CYAN}Draft negotiation language for the risky clauses in this contract${NC}"
+echo -e "  ${CYAN}Tell me what protections are missing from this contract${NC}"
+echo -e "  ${CYAN}Generate a mutual NDA for these two parties${NC}"
+echo -e "  ${CYAN}Generate terms of service for this website${NC}"
+echo -e "  ${CYAN}Generate a privacy policy for this website${NC}"
+echo -e "  ${CYAN}Draft a freelancer agreement / MSA / SOW / partnership agreement${NC}"
+echo -e "  ${CYAN}Review this contract from the freelancer's perspective${NC}"
+echo -e "  ${CYAN}Audit this website for compliance gaps${NC}"
+echo -e "  ${CYAN}Turn the latest legal analysis into a PDF report${NC}"
 echo ""
-echo -e "  ${YELLOW}Tip:${NC} Start with ${CYAN}/legal review <file>${NC} for a full contract analysis!"
+echo -e "  ${YELLOW}Tip:${NC} Start with ${CYAN}Review this contract and give me a full risk report${NC}"
+echo -e "  ${YELLOW}Note:${NC} This bundle is optimized for Codex natural-language triggering."
 echo ""

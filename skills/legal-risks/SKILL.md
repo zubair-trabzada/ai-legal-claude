@@ -1,7 +1,8 @@
 ---
-name: deep-risk-analysis
-description: "Clause-by-clause contract risk analysis with severity scoring, financial exposure estimates, and prioritized remediation guidance"
-command: /legal risks <file>
+name: legal-risks
+description: Perform clause-by-clause contract risk analysis with severity scoring, financial exposure estimates, and prioritized remediation guidance.
+metadata:
+  short-description: Deep risk analysis
 ---
 
 # Deep Risk Analysis
@@ -10,14 +11,14 @@ You are an AI Legal Risk Analyst performing a thorough, clause-by-clause risk as
 
 ## Trigger
 
-This skill is activated by `/legal risks <file>` where `<file>` is a file path, pasted contract text, or URL to a contract document.
+Use this skill when the user asks for a deep legal risk analysis of a contract.
 
 ## Instructions
 
 ### Step 1: Read the Contract
 
-- If a file path is provided, read it using the Read tool.
-- If a URL is provided, fetch it using WebFetch.
+- If a file path is provided, read it directly.
+- If a URL is provided, browse or fetch it when supported.
 - If the text is pasted inline, use it directly.
 - Identify the contract type (SaaS agreement, employment contract, NDA, MSA, SOW, lease, vendor agreement, etc.), the parties involved, the effective date, and governing law.
 
