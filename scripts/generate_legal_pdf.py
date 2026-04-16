@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-AI Legal Assistant — PDF Report Generator
-Generates professional contract review PDF reports using ReportLab.
+AI 法律助手 — PDF 报告生成器
+使用 ReportLab 生成专业的中文合同审查 PDF 报告。
 """
 
 import sys
@@ -22,43 +22,80 @@ try:
     from reportlab.graphics.shapes import Drawing, Circle, Rect, String, Line, Wedge
     from reportlab.graphics import renderPDF
     from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
 except ImportError:
-    print("ERROR: reportlab is required. Install with: pip3 install reportlab")
+    print("错误: 需要 reportlab 库。请使用以下命令安装: pip3 install reportlab")
     sys.exit(1)
 
 
 # ---------------------------------------------------------------------------
-# Color Palette
+# 字体设置 (支持中文)
+# ---------------------------------------------------------------------------
+def register_chinese_fonts():
+    """注册中文字体，优先尝试系统自带字体。"""
+    font_paths = [
+        # Windows 路径
+        "C:\\Windows\\Fonts\\simhei.ttf",
+        "C:\\Windows\\Fonts\\simsun.ttc",
+        # macOS 路径
+        "/System/Library/Fonts/STHeiti Light.ttc",
+        "/Library/Fonts/Arial Unicode.ttf",
+        # Linux 路径 (常见位置)
+        "/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
+        "/usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc",
+        # 当前目录下的字体文件
+        "simhei.ttf"
+    ]
+    
+    registered_name = "Helvetica" # 默认回退
+    
+    for path in font_paths:
+        if os.path.exists(path):
+            try:
+                # 统一注册为 'ChineseFont' 方便后面调用
+                pdfmetrics.registerFont(TTFont('ChineseFont', path))
+                registered_name = "ChineseFont"
+                break
+            except:
+                continue
+    
+    return registered_name
+
+CHINESE_FONT = register_chinese_fonts()
+
+# ---------------------------------------------------------------------------
+# 颜色调色板
 # ---------------------------------------------------------------------------
 COLORS = {
-    "primary": HexColor("#1a365d"),      # Dark navy
-    "secondary": HexColor("#2d5f8a"),    # Medium blue
-    "accent": HexColor("#3182ce"),       # Bright blue
-    "success": HexColor("#38a169"),      # Green
-    "warning": HexColor("#d69e2e"),      # Yellow/amber
-    "danger": HexColor("#e53e3e"),       # Red
-    "light_bg": HexColor("#f7fafc"),     # Light gray bg
-    "dark_text": HexColor("#1a202c"),    # Near black
-    "gray_text": HexColor("#718096"),    # Gray
+    "primary": HexColor("#1a365d"),      # 深海军蓝
+    "secondary": HexColor("#2d5f8a"),    # 中蓝
+    "accent": HexColor("#3182ce"),       # 亮蓝
+    "success": HexColor("#38a169"),      # 绿色 (低风险)
+    "warning": HexColor("#d69e2e"),      # 橙黄色 (中风险)
+    "danger": HexColor("#e53e3e"),       # 红色 (高风险)
+    "light_bg": HexColor("#f7fafc"),     # 浅灰背景
+    "dark_text": HexColor("#1a202c"),    # 深色文字
+    "gray_text": HexColor("#718096"),    # 灰色文字
     "white": white,
     "black": black,
-    "light_border": HexColor("#e2e8f0"), # Light border
-    "high_risk_bg": HexColor("#fff5f5"), # Light red bg
-    "med_risk_bg": HexColor("#fffff0"),  # Light yellow bg
-    "low_risk_bg": HexColor("#f0fff4"),  # Light green bg
+    "light_border": HexColor("#e2e8f0"), # 浅色边框
+    "high_risk_bg": HexColor("#fff5f5"), # 浅红背景
+    "med_risk_bg": HexColor("#fffff0"),  # 浅黄背景
+    "low_risk_bg": HexColor("#f0fff4"),  # 浅绿背景
 }
 
 
 # ---------------------------------------------------------------------------
-# Score Gauge Drawing
+# 评分仪表盘
 # ---------------------------------------------------------------------------
 def create_score_gauge(score, size=200):
-    """Create a semi-circular gauge showing the contract safety score."""
+    """创建一个半圆仪表盘，显示合同安全分。"""
     d = Drawing(size, size * 0.65)
     cx, cy = size / 2, size * 0.55
     radius = size * 0.4
 
-    # Background arc segments
+    # 背景圆弧段
     segments = [
         (0, 36, COLORS["danger"]),
         (36, 72, HexColor("#ed8936")),
@@ -72,23 +109,23 @@ def create_score_gauge(score, size=200):
                   fillColor=color, strokeColor=white, strokeWidth=2)
         d.add(w)
 
-    # Inner circle (white center)
+    # 内圆 (白色中心)
     inner = Circle(cx, cy, radius * 0.65, fillColor=white, strokeColor=None)
     d.add(inner)
 
-    # Score text
+    # 分数文字
     score_str = str(int(score))
     score_text = String(cx, cy - 5, score_str,
                         fontSize=36, fillColor=COLORS["primary"],
-                        textAnchor="middle", fontName="Helvetica-Bold")
+                        textAnchor="middle", fontName=CHINESE_FONT + "-Bold" if CHINESE_FONT == "Helvetica" else CHINESE_FONT)
     d.add(score_text)
 
     label = String(cx, cy - 22, "/ 100",
                    fontSize=12, fillColor=COLORS["gray_text"],
-                   textAnchor="middle", fontName="Helvetica")
+                   textAnchor="middle", fontName=CHINESE_FONT)
     d.add(label)
 
-    # Needle
+    # 指针
     angle_deg = 180 + (score / 100) * 180
     angle_rad = math.radians(angle_deg)
     needle_len = radius * 0.55
@@ -97,7 +134,7 @@ def create_score_gauge(score, size=200):
     needle = Line(cx, cy, nx, ny, strokeColor=COLORS["primary"], strokeWidth=2.5)
     d.add(needle)
 
-    # Center dot
+    # 中心点
     center_dot = Circle(cx, cy, 5, fillColor=COLORS["primary"], strokeColor=None)
     d.add(center_dot)
 
@@ -105,10 +142,10 @@ def create_score_gauge(score, size=200):
 
 
 # ---------------------------------------------------------------------------
-# Risk Bar Chart
+# 风险柱状图
 # ---------------------------------------------------------------------------
 def create_risk_bar_chart(high, medium, low, width=400, height=100):
-    """Create a horizontal stacked bar chart showing risk distribution."""
+    """创建一个水平堆叠柱状图，显示风险分布。"""
     d = Drawing(width, height)
     total = high + medium + low
     if total == 0:
@@ -119,7 +156,7 @@ def create_risk_bar_chart(high, medium, low, width=400, height=100):
     x_start = width * 0.15
     y = height * 0.4
 
-    # Bars
+    # 柱条
     high_w = (high / total) * bar_width if total > 0 else 0
     med_w = (medium / total) * bar_width if total > 0 else 0
     low_w = (low / total) * bar_width if total > 0 else 0
@@ -134,66 +171,70 @@ def create_risk_bar_chart(high, medium, low, width=400, height=100):
         d.add(Rect(x_start + high_w + med_w, y, low_w, bar_height,
                     fillColor=COLORS["success"], strokeColor=None))
 
-    # Labels
+    # 标签
     labels = [
-        (f"High Risk: {high}", COLORS["danger"], x_start),
-        (f"Medium: {medium}", COLORS["warning"], x_start + bar_width * 0.35),
-        (f"Low Risk: {low}", COLORS["success"], x_start + bar_width * 0.7),
+        (f"高风险: {high}", COLORS["danger"], x_start),
+        (f"中风险: {medium}", COLORS["warning"], x_start + bar_width * 0.35),
+        (f"低风险: {low}", COLORS["success"], x_start + bar_width * 0.7),
     ]
     for text, color, x in labels:
         d.add(String(x, y - 15, text, fontSize=9, fillColor=color,
-                     fontName="Helvetica-Bold"))
+                     fontName=CHINESE_FONT))
 
     return d
 
 
 # ---------------------------------------------------------------------------
-# Styles
+# 样式定义
 # ---------------------------------------------------------------------------
 def get_styles():
     styles = getSampleStyleSheet()
 
+    # 更新默认字体
+    for style_name in styles.byName:
+        styles[style_name].fontName = CHINESE_FONT
+
     styles.add(ParagraphStyle(
-        name="CoverTitle", fontName="Helvetica-Bold", fontSize=28,
+        name="CoverTitle", fontName=CHINESE_FONT, fontSize=28,
         textColor=COLORS["primary"], alignment=TA_CENTER, spaceAfter=10
     ))
     styles.add(ParagraphStyle(
-        name="CoverSubtitle", fontName="Helvetica", fontSize=14,
+        name="CoverSubtitle", fontName=CHINESE_FONT, fontSize=14,
         textColor=COLORS["gray_text"], alignment=TA_CENTER, spaceAfter=30
     ))
     styles.add(ParagraphStyle(
-        name="SectionHeader", fontName="Helvetica-Bold", fontSize=16,
+        name="SectionHeader", fontName=CHINESE_FONT, fontSize=16,
         textColor=COLORS["primary"], spaceBefore=20, spaceAfter=10,
         borderWidth=0, borderPadding=5
     ))
     styles.add(ParagraphStyle(
-        name="SubHeader", fontName="Helvetica-Bold", fontSize=12,
+        name="SubHeader", fontName=CHINESE_FONT, fontSize=12,
         textColor=COLORS["secondary"], spaceBefore=12, spaceAfter=6
     ))
     styles.add(ParagraphStyle(
-        name="BodyText2", fontName="Helvetica", fontSize=10,
+        name="BodyText2", fontName=CHINESE_FONT, fontSize=10,
         textColor=COLORS["dark_text"], spaceBefore=4, spaceAfter=4,
         leading=14
     ))
     styles.add(ParagraphStyle(
-        name="RiskHigh", fontName="Helvetica-Bold", fontSize=10,
+        name="RiskHigh", fontName=CHINESE_FONT, fontSize=10,
         textColor=COLORS["danger"], spaceBefore=2, spaceAfter=2
     ))
     styles.add(ParagraphStyle(
-        name="RiskMedium", fontName="Helvetica-Bold", fontSize=10,
+        name="RiskMedium", fontName=CHINESE_FONT, fontSize=10,
         textColor=COLORS["warning"], spaceBefore=2, spaceAfter=2
     ))
     styles.add(ParagraphStyle(
-        name="RiskLow", fontName="Helvetica-Bold", fontSize=10,
+        name="RiskLow", fontName=CHINESE_FONT, fontSize=10,
         textColor=COLORS["success"], spaceBefore=2, spaceAfter=2
     ))
     styles.add(ParagraphStyle(
-        name="Disclaimer", fontName="Helvetica-Oblique", fontSize=8,
+        name="Disclaimer", fontName=CHINESE_FONT, fontSize=8,
         textColor=COLORS["gray_text"], alignment=TA_CENTER, spaceBefore=10,
         spaceAfter=10
     ))
     styles.add(ParagraphStyle(
-        name="Footer", fontName="Helvetica", fontSize=8,
+        name="Footer", fontName=CHINESE_FONT, fontSize=8,
         textColor=COLORS["gray_text"], alignment=TA_CENTER
     ))
 
@@ -201,10 +242,10 @@ def get_styles():
 
 
 # ---------------------------------------------------------------------------
-# PDF Builder
+# PDF 构建器
 # ---------------------------------------------------------------------------
 def build_pdf(data, output_path):
-    """Build the PDF report from structured data."""
+    """根据结构化数据构建 PDF 报告。"""
     styles = get_styles()
     doc = SimpleDocTemplate(
         output_path, pagesize=letter,
@@ -213,59 +254,56 @@ def build_pdf(data, output_path):
     )
     story = []
 
-    # ── Cover Page ──
+    # ── 封面 ──
     story.append(Spacer(1, 1.8 * inch))
-    story.append(Paragraph("Contract Review Report", styles["CoverTitle"]))
+    story.append(Paragraph("合同审查报告", styles["CoverTitle"]))
     story.append(Spacer(1, 40))
     story.append(Paragraph(
-        f"Generated {datetime.now().strftime('%B %d, %Y')}",
+        f"生成日期: {datetime.now().strftime('%Y年%m月%d日')}",
         styles["CoverSubtitle"]
     ))
     story.append(Spacer(1, 60))
 
-    # Score gauge
+    # 评分仪表盘
     score = data.get("score", 0)
     gauge = create_score_gauge(score)
     story.append(gauge)
     story.append(Spacer(1, 40))
 
-    # Grade label
+    # 等级标签
     grade = data.get("grade", "N/A")
     grade_label = data.get("grade_label", "")
     story.append(Paragraph(
-        f"Grade: {grade} — {grade_label}", styles["CoverSubtitle"]
+        f"等级: {grade} — {grade_label}", styles["CoverSubtitle"]
     ))
 
-    # Disclaimer
+    # 免责声明
     story.append(Spacer(1, 40))
     story.append(Paragraph(
-        "LEGAL DISCLAIMER: This analysis is AI-generated and does not constitute legal advice. "
-        "It is intended as a starting point for review. Always consult a licensed attorney "
-        "before signing contracts or relying on generated legal documents.",
+        "法律免责声明：本分析由 AI 生成，不构成正式法律意见。本报告仅供审查参考。在签署合同或依赖本报告之前，请务必咨询专业律师。",
         styles["Disclaimer"]
     ))
 
     story.append(PageBreak())
 
-    # ── Contract Details ──
-    story.append(Paragraph("Contract Details", styles["SectionHeader"]))
+    # ── 合同详情 ──
+    story.append(Paragraph("合同基本信息", styles["SectionHeader"]))
     story.append(HRFlowable(
         width="100%", thickness=1, color=COLORS["light_border"]
     ))
 
     details = data.get("details", {})
     detail_rows = [
-        ["Contract Type", details.get("type", "N/A")],
-        ["Parties", details.get("parties", "N/A")],
-        ["Effective Date", details.get("effective_date", "N/A")],
-        ["Term", details.get("term", "N/A")],
-        ["Total Value", details.get("total_value", "N/A")],
-        ["Governing Law", details.get("governing_law", "N/A")],
+        ["合同类型", details.get("type", "N/A")],
+        ["当事人", details.get("parties", "N/A")],
+        ["生效日期", details.get("effective_date", "N/A")],
+        ["履行期限", details.get("term", "N/A")],
+        ["合同总值", details.get("total_value", "N/A")],
+        ["管辖法律/机构", details.get("governing_law", "N/A")],
     ]
     detail_table = Table(detail_rows, colWidths=[2 * inch, 4.5 * inch])
     detail_table.setStyle(TableStyle([
-        ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-        ("FONTNAME", (1, 0), (1, -1), "Helvetica"),
+        ("FONTNAME", (0, 0), (-1, -1), CHINESE_FONT),
         ("FONTSIZE", (0, 0), (-1, -1), 10),
         ("TEXTCOLOR", (0, 0), (0, -1), COLORS["primary"]),
         ("TEXTCOLOR", (1, 0), (1, -1), COLORS["dark_text"]),
@@ -276,19 +314,19 @@ def build_pdf(data, output_path):
     story.append(detail_table)
     story.append(Spacer(1, 20))
 
-    # ── Executive Summary ──
-    story.append(Paragraph("Executive Summary", styles["SectionHeader"]))
+    # ── 执行摘要 ──
+    story.append(Paragraph("执行摘要", styles["SectionHeader"]))
     story.append(HRFlowable(
         width="100%", thickness=1, color=COLORS["light_border"]
     ))
     story.append(Paragraph(
-        data.get("executive_summary", "No summary available."),
+        data.get("executive_summary", "无可用摘要。"),
         styles["BodyText2"]
     ))
     story.append(Spacer(1, 20))
 
-    # ── Risk Dashboard ──
-    story.append(Paragraph("Risk Dashboard", styles["SectionHeader"]))
+    # ── 风险看板 ──
+    story.append(Paragraph("风险看板", styles["SectionHeader"]))
     story.append(HRFlowable(
         width="100%", thickness=1, color=COLORS["light_border"]
     ))
@@ -300,19 +338,19 @@ def build_pdf(data, output_path):
     story.append(risk_chart)
     story.append(Spacer(1, 15))
 
-    # Risk summary table
+    # 风险摘要表格
     risk_rows = [
-        ["Risk Level", "Count", "Clauses"],
-        ["HIGH RISK", str(risks.get("high", 0)),
-         risks.get("high_clauses", "None")],
-        ["MEDIUM RISK", str(risks.get("medium", 0)),
-         risks.get("medium_clauses", "None")],
-        ["LOW RISK", str(risks.get("low", 0)),
-         risks.get("low_clauses", "None")],
+        ["风险等级", "条款数量", "涉及条款"],
+        ["🔴 高风险", str(risks.get("high", 0)),
+         risks.get("high_clauses", "无")],
+        ["🟡 中风险", str(risks.get("medium", 0)),
+         risks.get("medium_clauses", "无")],
+        ["🟢 低风险", str(risks.get("low", 0)),
+         risks.get("low_clauses", "无")],
     ]
     risk_table = Table(risk_rows, colWidths=[1.5 * inch, 1 * inch, 4 * inch])
     risk_table.setStyle(TableStyle([
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTNAME", (0, 0), (-1, -1), CHINESE_FONT),
         ("FONTSIZE", (0, 0), (-1, -1), 9),
         ("BACKGROUND", (0, 0), (-1, 0), COLORS["primary"]),
         ("TEXTCOLOR", (0, 0), (-1, 0), COLORS["white"]),
@@ -322,7 +360,6 @@ def build_pdf(data, output_path):
         ("TEXTCOLOR", (0, 2), (0, 2), COLORS["warning"]),
         ("BACKGROUND", (0, 3), (-1, 3), COLORS["low_risk_bg"]),
         ("TEXTCOLOR", (0, 3), (0, 3), COLORS["success"]),
-        ("FONTNAME", (0, 1), (0, -1), "Helvetica-Bold"),
         ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
         ("TOPPADDING", (0, 0), (-1, -1), 8),
         ("GRID", (0, 0), (-1, -1), 0.5, COLORS["light_border"]),
@@ -330,11 +367,11 @@ def build_pdf(data, output_path):
     story.append(risk_table)
     story.append(Spacer(1, 20))
 
-    # ── Clause Analysis ──
+    # ── 条款分析 ──
     clauses = data.get("clauses", [])
     if clauses:
         story.append(PageBreak())
-        story.append(Paragraph("Clause-by-Clause Analysis", styles["SectionHeader"]))
+        story.append(Paragraph("逐条条款分析", styles["SectionHeader"]))
         story.append(HRFlowable(
             width="100%", thickness=1, color=COLORS["light_border"]
         ))
@@ -346,38 +383,33 @@ def build_pdf(data, output_path):
                 "medium": COLORS["warning"],
                 "low": COLORS["success"]
             }.get(risk, COLORS["gray_text"])
-            risk_emoji = {"high": "HIGH RISK", "medium": "MEDIUM RISK", "low": "LOW RISK"}.get(risk, "")
-            risk_bg = {
-                "high": COLORS["high_risk_bg"],
-                "medium": COLORS["med_risk_bg"],
-                "low": COLORS["low_risk_bg"]
-            }.get(risk, COLORS["light_bg"])
+            risk_emoji = {"high": "🔴 高风险", "medium": "🟡 中风险", "low": "🟢 低风险"}.get(risk, "")
 
             clause_block = []
             clause_block.append(Paragraph(
                 f'<font color="{risk_color.hexval()}">[{risk_emoji}]</font> '
-                f'<b>{clause.get("name", "Unnamed Clause")}</b> — Section {clause.get("section", "N/A")}',
+                f'<b>{clause.get("name", "未命名条款")}</b> — 第 {clause.get("section", "N/A")} 节',
                 styles["SubHeader"]
             ))
             if clause.get("summary"):
                 clause_block.append(Paragraph(
-                    f'<b>What it says:</b> {clause["summary"]}', styles["BodyText2"]
+                    f'<b>内容摘要:</b> {clause["summary"]}', styles["BodyText2"]
                 ))
             if clause.get("risk_explanation"):
                 clause_block.append(Paragraph(
-                    f'<b>Why it matters:</b> {clause["risk_explanation"]}', styles["BodyText2"]
+                    f'<b>风险点:</b> {clause["risk_explanation"]}', styles["BodyText2"]
                 ))
             if clause.get("recommendation"):
                 clause_block.append(Paragraph(
-                    f'<b>Recommended change:</b> {clause["recommendation"]}', styles["BodyText2"]
+                    f'<b>修改建议:</b> {clause["recommendation"]}', styles["BodyText2"]
                 ))
             clause_block.append(Spacer(1, 10))
             story.append(KeepTogether(clause_block))
 
-    # ── Negotiation Priorities ──
+    # ── 谈判优先级 ──
     priorities = data.get("negotiation_priorities", [])
     if priorities:
-        story.append(Paragraph("Negotiation Priorities", styles["SectionHeader"]))
+        story.append(Paragraph("谈判优先级", styles["SectionHeader"]))
         story.append(HRFlowable(
             width="100%", thickness=1, color=COLORS["light_border"]
         ))
@@ -385,10 +417,10 @@ def build_pdf(data, output_path):
             story.append(Paragraph(f"<b>{i}.</b> {priority}", styles["BodyText2"]))
         story.append(Spacer(1, 20))
 
-    # ── Missing Protections ──
+    # ── 缺失的保护性条款 ──
     missing = data.get("missing_protections", [])
     if missing:
-        story.append(Paragraph("Missing Protections", styles["SectionHeader"]))
+        story.append(Paragraph("缺失的必要保障", styles["SectionHeader"]))
         story.append(HRFlowable(
             width="100%", thickness=1, color=COLORS["light_border"]
         ))
@@ -396,51 +428,50 @@ def build_pdf(data, output_path):
             story.append(Paragraph(f"• {item}", styles["BodyText2"]))
         story.append(Spacer(1, 20))
 
-    # ── Next Steps ──
+    # ── 后续步骤 ──
     steps = data.get("next_steps", [])
     if steps:
-        story.append(Paragraph("Recommended Next Steps", styles["SectionHeader"]))
+        story.append(Paragraph("建议后续步骤", styles["SectionHeader"]))
         story.append(HRFlowable(
             width="100%", thickness=1, color=COLORS["light_border"]
         ))
         for i, step in enumerate(steps, 1):
             story.append(Paragraph(f"<b>{i}.</b> {step}", styles["BodyText2"]))
 
-    # ── Footer Disclaimer ──
+    # ── 页脚 ──
     story.append(Spacer(1, 40))
     story.append(HRFlowable(
         width="100%", thickness=0.5, color=COLORS["light_border"]
     ))
     story.append(Paragraph(
-        "This report was generated by the AI Legal Assistant. "
-        "It does not constitute legal advice. Consult a licensed attorney before signing.",
+        "本报告由 AI 法律助手生成。不构成法律意见。签署前请咨询律师。",
         styles["Disclaimer"]
     ))
     story.append(Paragraph(
-        f"Generated on {datetime.now().strftime('%B %d, %Y at %I:%M %p')}",
+        f"生成于 {datetime.now().strftime('%Y年%m月%d日 %H:%M')}",
         styles["Footer"]
     ))
 
-    # Build
+    # 构建
     doc.build(story)
     return output_path
 
 
 # ---------------------------------------------------------------------------
-# Main
+# 主程序
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python3 generate_legal_pdf.py <json_data_file> [output_path]")
-        print("  json_data_file: Path to JSON file with report data")
-        print("  output_path: Optional output PDF path (default: CONTRACT-REVIEW-REPORT.pdf)")
+        print("用法: python3 generate_legal_pdf.py <json数据文件> [输出路径]")
+        print("  json数据文件: 包含报告数据的 JSON 文件路径")
+        print("  输出路径: 可选的 PDF 输出路径 (默认: 合同审查报告.pdf)")
         sys.exit(1)
 
     json_path = sys.argv[1]
-    output_path = sys.argv[2] if len(sys.argv) > 2 else "CONTRACT-REVIEW-REPORT.pdf"
+    output_path = sys.argv[2] if len(sys.argv) > 2 else "合同审查报告.pdf"
 
-    with open(json_path, "r") as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     result = build_pdf(data, output_path)
-    print(f"PDF generated: {result}")
+    print(f"PDF 已生成: {result}")
