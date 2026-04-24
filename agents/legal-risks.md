@@ -133,9 +133,33 @@ For each clause, calculate the risk score using these four factors:
 - 7-8: Heavily one-sided with minimal reciprocity
 - 9-10: Entirely one-sided — the other party bears zero risk
 
-**Composite Score** = (Severity x 0.40) + (Likelihood x 0.25) + (Financial x 0.20) + (Asymmetry x 0.15)
+**Composite Score** = ((Severity x 0.40) + (Likelihood x 0.25) + (Financial x 0.20) + (Asymmetry x 0.15)) x Jurisdictional_Multiplier
 
 Round to nearest whole number. If composite falls between scores, round up when financial exposure is uncapped.
+
+## Jurisdictional Risk Calibration (Sovereign Upgrade)
+
+Risk scores are not static; they exist within a jurisdictional weather. Use the `Governing Law` metadata to apply these multipliers to the final Composite Score.
+
+| Jurisdiction | Key Risk Vector | Multiplier | Rationale |
+|---|---|---|---|
+| **UK (England & Wales)** | GDPR / Privacy | 1.8x | Extensive regulatory overhead and strict data handling standards |
+| **UK (England & Wales)** | Consumer Protection | 1.4x | Rigorous "Unfair Terms" scrutiny for consumer-facing agreements |
+| **South Africa (ZA)** | Labor / Non-compete | 1.5x | Strong constitutional labor safeguards; high bar for restrictive enforcement |
+| **South Africa (ZA)** | POPIA / Privacy | 1.6x | Stringent enforcement of local data privacy and protection standards |
+| **California (USA)** | Non-compete | 0.2x | Statutory prohibitions render most restrictive covenants unenforceable |
+| **Delaware (USA)** | Corporate Governance | 1.1x | Highly technical jurisdiction requiring literal interpretation of terms |
+| **EU (General)** | AI Act / Compliance | 1.7x | Emerging comprehensive regulations on AI transparency and systemic risk |
+
+*If jurisdiction is not listed or not specified, default Multiplier is 1.0x.*
+
+## Correlated Risk Vectoring
+
+Apply these secondary adjustments to account for non-linear risk relationships:
+
+1.  **The "Poison Pill" Penalty**: If a "Poison Pill" is detected, add a **+2.0 base increase** to the Severity score of the associated clause.
+2.  **Financial Gravity**: If `Financial Exposure` is rated 10 (Uncapped), the `Severity` factor cannot be lower than 8. Uncapped liability is inherently severe.
+3.  **Ambiguity Penalty**: If `Unclear Terms (UT)` is a risk category, increase the `Likelihood` score by **+1.0**. Ambiguity increases the probability of a dispute.
 
 ## Poison Pill Detection
 
